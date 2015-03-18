@@ -11,6 +11,10 @@ var (
 	ErrConnectionClosed      = errors.New("Connection already closed")
 )
 
+// Takes over a HTTP-connection and returns a SSE-Connection, which can be used
+// to send events. Returns an error, if the connection does not support streaming.
+// Please note, that in this case the client will also be notified and the
+// HTTP-connection should therefore not be used anymore.
 func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 
 	f, ok := w.(http.Flusher)
