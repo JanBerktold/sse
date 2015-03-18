@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var source = new EventSource("event");
+			source.onmessage = function(event) {
+			    document.getElementById("result").innerHTML += event.data + "<br>";
+			};
+		</script>
+		<div id="result">
+		</div>
+	</body>
+</html>
