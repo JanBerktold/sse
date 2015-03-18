@@ -8,7 +8,7 @@ This is a lightweight SEE library for Golang which is designed to play nicely al
 *Note:* Also look into the examples folder.
 
 ```go
-ìmport (
+import (
 	"net/http"
 	"github.com/janberktold/sse"
 )
@@ -57,7 +57,7 @@ func main() {
 
 ## The MIT License (MIT)
 
-Copyright (c) 2015 Jan berktold
+Copyright (c) 2015 Jan Berktold
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
