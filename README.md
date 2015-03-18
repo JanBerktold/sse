@@ -1,5 +1,5 @@
 # Server-sent events for Go
-[![Build Status](https://travis-ci.org/JanBerktold/sse.svg)](https://travis-ci.org/JanBerktold/sse)
+[![Build Status](https://travis-ci.org/JanBerktold/sse.svg)](https://travis-ci.org/JanBerktold/sse) [![GoDoc](https://godoc.org/github.com/JanBerktold/sse?status.svg)](https://godoc.org/github.com/JanBerktold/sse)
 
 This is a lightweight SEE library for Golang which is designed to play nicely along different packages and provide a convient usage. Compatible with every Go version since 1.1.
 
