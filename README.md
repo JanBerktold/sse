@@ -59,6 +59,52 @@ func main() {
 
 ```
 
+### Usage with a Upgrader instance
+
+Using a Upgrader instance allows you to specify a RetryTime interval at which the client will attempt to reconnect to the EventSource.
+
+```go
+import (
+	"net/http"
+	"github.com/janberktold/sse"
+)
+
+type Person struct {
+	Name string
+	Age int
+}
+
+func main() {
+
+	upgrader := sse.Upgrader{
+		RetryTime: 5 * time.Second,
+	}
+
+	http.HandleFunc("/event", func(w http.ResponseWriter, r *http.Request) {
+		// get a SSE connection from the HTTP request
+		// in a real world situation, you should look for the error (second return value)
+		conn, _ := sse.Upgrade(w, r)
+
+		// writes the struct as JSON
+		conn.WriteJson(&Person{
+			Name: "Jan",
+			Age: 17,
+		})
+
+		for {
+			// get a message from some channel
+			// blocks until it recieves a messages and then instantly sends it to the client
+			msg := <-someChannel
+			conn.WriteString(msg)
+		}
+	})
+
+	http.ListenAndService(":80", nil)
+}
+
+```
+
+
 ## The MIT License (MIT)
 
 Copyright (c) 2015 Jan Berktold
