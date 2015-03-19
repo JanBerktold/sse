@@ -42,6 +42,8 @@ func (c *Conn) WriteString(msg string) error {
 	return c.WriteEvent("", []byte(msg))
 }
 
+// Sends a string to the connected client, targeting the specified event. Returns an error
+// if the connection is already closed.
 func (c *Conn) WriteStringEvent(typ, msg string) error {
 	return c.WriteEvent(typ, []byte(msg))
 }
@@ -52,6 +54,8 @@ func (c *Conn) WriteJson(value interface{}) error {
 	return c.WriteJsonEvent("", value)
 }
 
+// Sends a json-encoded struct to the connected client, targeting the specified event. Returns an error
+// if the connection is already closed or if the encoding failed.
 func (c *Conn) WriteJsonEvent(typ string, value interface{}) error {
 	if by, err := json.Marshal(value); err == nil {
 		return c.WriteEvent(typ, by)
@@ -66,6 +70,8 @@ func (c *Conn) WriteXml(value interface{}) error {
 	return c.WriteXmlEvent("", value)
 }
 
+// Sends a xml-encoded struct to the connected client, targeting the specified event. Returns an error
+// if the connection is already closed or if the encoding failed.
 func (c *Conn) WriteXmlEvent(typ string, value interface{}) error {
 	if by, err := xml.Marshal(value); err == nil {
 		return c.WriteEvent(typ, by)
