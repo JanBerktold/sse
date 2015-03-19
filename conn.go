@@ -19,10 +19,12 @@ type message struct {
 // Sends a byte-slice to the connected client. Returns an error
 // if the connection is already closed.
 func (c *Conn) Write(msg []byte) error {
-	return c.WriteEvent(msg, "")
+	return c.WriteEvent("", msg)
 }
 
-func (c *Conn) WriteEvent(msg []byte, typ string) error {
+// Sends a byte-slice to the connected client and triggers the specified event with the data. Returns an error
+// if the connection is already closed.
+func (c *Conn) WriteEvent(typ string, msg []byte) error {
 	if !c.isOpen {
 		return ErrConnectionClosed
 	} else {
@@ -37,22 +39,22 @@ func (c *Conn) WriteEvent(msg []byte, typ string) error {
 // Sends a string to the connected client. Returns an error
 // if the connection is already closed.
 func (c *Conn) WriteString(msg string) error {
-	return c.WriteEvent([]byte(msg), "")
+	return c.WriteEvent("", []byte(msg))
 }
 
-func (c *Conn) WriteStringEvent(msg, typ string) error {
-	return c.WriteEvent([]byte(msg), typ)
+func (c *Conn) WriteStringEvent(typ, msg string) error {
+	return c.WriteEvent(typ, []byte(msg))
 }
 
 // Sends a json-encoded struct to the connected client. Returns an error
 // if the connection is already closed or if the encoding failed.
 func (c *Conn) WriteJson(value interface{}) error {
-	return c.WriteJsonEvent(value, "")
+	return c.WriteJsonEvent("", value)
 }
 
-func (c *Conn) WriteJsonEvent(value interface{}, typ string) error {
+func (c *Conn) WriteJsonEvent(typ string, value interface{}) error {
 	if by, err := json.Marshal(value); err == nil {
-		return c.WriteEvent(by, typ)
+		return c.WriteEvent(typ, by)
 	} else {
 		return err
 	}
@@ -61,12 +63,12 @@ func (c *Conn) WriteJsonEvent(value interface{}, typ string) error {
 // Sends a xml-encoded struct to the connected client. Returns an error
 // if the connection is already closed or if the encoding failed.
 func (c *Conn) WriteXml(value interface{}) error {
-	return c.WriteXmlEvent(value, "")
+	return c.WriteXmlEvent("", value)
 }
 
-func (c *Conn) WriteXmlEvent(value interface{}, typ string) error {
+func (c *Conn) WriteXmlEvent(typ string, value interface{}) error {
 	if by, err := xml.Marshal(value); err == nil {
-		return c.WriteEvent(by, typ)
+		return c.WriteEvent(typ, by)
 	} else {
 		return err
 	}
