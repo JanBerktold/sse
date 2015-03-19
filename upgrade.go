@@ -29,7 +29,7 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 	w.Header().Set("Connection", "keep-alive")
 
 	conn := &Conn{
-		messages: make(chan []byte),
+		messages: make(chan message),
 		shutdown: make(chan bool),
 		isOpen:   true,
 	}
@@ -40,7 +40,10 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 		for {
 			select {
 			case msg := <-conn.messages:
-				fmt.Fprintf(w, "data: %s\n\n", msg)
+				if len(msg.typ) > 0 {
+					fmt.Fprintf(w, "event: %s\n", msg.typ)
+				}
+				fmt.Fprintf(w, "data: %s\n\n", msg.message)
 				f.Flush()
 			case <-conn.shutdown:
 				conn.isOpen = false
