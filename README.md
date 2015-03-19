@@ -40,6 +40,10 @@ func main() {
 		// write a plain string
 		conn.WriteString("Hello how are you?")
 
+		// trigger the event "feed" with "This is a message" as payload
+		// [extended example](https://github.com/JanBerktold/sse/tree/master/examples/events)
+		conn.WriteStringEvent("feed", "This is a message")
+
 		for {
 			// keep this goroutine alive to keep the connection
 
