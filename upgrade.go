@@ -4,18 +4,26 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 var (
 	ErrStreamingNotSupported = errors.New("Streaming unsupported!")
 	ErrConnectionClosed      = errors.New("Connection already closed")
+
+	globalUpgrader = Upgrader{}
 )
+
+type Upgrader struct {
+	// time between two connects from a client
+	RetryTime time.Duration
+}
 
 // Takes over a HTTP-connection and returns a SSE-Connection, which can be used
 // to send events. Returns an error, if the connection does not support streaming.
 // Please note, that in this case the client will also be notified and the
 // HTTP-connection should therefore not be used anymore.
-func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
+func (up Upgrader) Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 
 	f, ok := w.(http.Flusher)
 	if !ok {
@@ -35,6 +43,11 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 	}
 
 	notify := w.(http.CloseNotifier).CloseNotify()
+
+	// tell client about retry time
+	if up.RetryTime > 0 {
+		fmt.Fprintf(w, "retry: %s\n", up.RetryTime)
+	}
 
 	go func() {
 		for {
@@ -56,4 +69,10 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 	}()
 
 	return conn, nil
+}
+
+// Global Upgrade for method for usage without a Upgrader instance.
+// Refer to Upgrader.Upgrade for complete documentation.
+func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
+	return globalUpgrader.Upgrade(w, r)
 }
