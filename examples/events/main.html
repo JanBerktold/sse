@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var source = new EventSource("event");
+			source.addEventListener("time", function (event) { 4
+  				document.getElementById("time").innerHTML += event.data + "<br>";
+			});
+			source.addEventListener("feed", function (event) { 4
+  				document.getElementById("feed_update").innerHTML += event.data + "<br>";
+			});
+			source.onmessage = function(event) {
+			    console.log(event)
+			};
+
+		</script>
+		<div style="width: 100%; overflow: hidden;">
+   			<div style="width: 600px; float: left;" id="feed_update"></div>
+    		<div style="margin-left: 620px;" id="time"></div>
+		</div>
+	</body>
+</html>
