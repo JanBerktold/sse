@@ -3,7 +3,6 @@ package sse
 import (
 	"encoding/json"
 	"encoding/xml"
-	"time"
 )
 
 type Conn struct {
