@@ -83,7 +83,7 @@ func main() {
 	http.HandleFunc("/event", func(w http.ResponseWriter, r *http.Request) {
 		// get a SSE connection from the HTTP request
 		// in a real world situation, you should look for the error (second return value)
-		conn, _ := sse.Upgrade(w, r)
+		conn, _ := upgrader.Upgrade(w, r)
 
 		// writes the struct as JSON
 		conn.WriteJson(&Person{
