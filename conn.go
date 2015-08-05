@@ -82,7 +82,7 @@ func (c *Conn) WriteXmlEvent(typ string, value interface{}) error {
 
 // Returns whether the connection is still opened.
 func (c *Conn) IsOpen() bool {
-	return c.IsOpen()
+	return c.isOpen
 }
 
 // Forces the connection to close. The Conn object should not be used anymore.
