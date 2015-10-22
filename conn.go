@@ -3,6 +3,7 @@ package sse
 import (
 	"encoding/json"
 	"encoding/xml"
+	"time"
 )
 
 type Conn struct {
@@ -25,15 +26,20 @@ func (c *Conn) Write(msg []byte) error {
 // Sends a byte-slice to the connected client and triggers the specified event with the data. Returns an error
 // if the connection is already closed.
 func (c *Conn) WriteEvent(typ string, msg []byte) error {
-	if !c.isOpen {
-		return ErrConnectionClosed
-	} else {
-		c.messages <- message{
-			message: msg,
-			typ:     typ,
-		}
-		return nil
-	}
+   for {
+      select {
+      case c.messages <- message{
+         message: msg,
+         typ:     typ,
+      }:
+         return nil
+      default:
+         if !c.isOpen {
+            return ErrConnectionClosed
+         }
+         time.Sleep(10*time.Microsecond) // give channel time to unblock
+      }
+   }
 }
 
 // Sends a string to the connected client. Returns an error
