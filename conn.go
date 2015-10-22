@@ -36,6 +36,7 @@ func (c *Conn) WriteEvent(typ string, msg []byte) error {
          if !c.isOpen {
             return ErrConnectionClosed
          }
+         time.Sleep(10*time.Microsecond) // give channel time to unblock
       }
    }
 }
