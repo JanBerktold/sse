@@ -27,13 +27,12 @@ func (c *Conn) Write(msg []byte) error {
 func (c *Conn) WriteEvent(typ string, msg []byte) error {
 	if !c.isOpen {
 		return ErrConnectionClosed
-	} else {
-		c.messages <- message{
-			message: msg,
-			typ:     typ,
-		}
-		return nil
 	}
+	c.messages <- message{
+		message: msg,
+		typ:     typ,
+	}
+	return nil
 }
 
 // Sends a string to the connected client. Returns an error
