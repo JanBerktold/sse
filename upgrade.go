@@ -53,6 +53,9 @@ func (up Upgrader) Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error
 		for {
 			select {
 			case msg := <-conn.messages:
+				if len(msg.id) > 0 {
+					fmt.Fprintf(w, "id: %s\n", msg.id)
+				}
 				if len(msg.typ) > 0 {
 					fmt.Fprintf(w, "event: %s\n", msg.typ)
 				}

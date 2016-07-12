@@ -14,6 +14,7 @@ type Conn struct {
 type message struct {
 	message []byte
 	typ     string
+	id      string
 }
 
 // Sends a byte-slice to the connected client. Returns an error
@@ -25,15 +26,23 @@ func (c *Conn) Write(msg []byte) error {
 // Sends a byte-slice to the connected client and triggers the specified event with the data. Returns an error
 // if the connection is already closed.
 func (c *Conn) WriteEvent(typ string, msg []byte) error {
+	return c.WriteEventWithID("", typ, msg)
+}
+
+// Sends a byte-slice to the connected client and triggers the specified event with the data. Returns an error
+// if the connection is already closed.
+func (c *Conn) WriteEventWithID(id, typ string, msg []byte) error {
 	if !c.isOpen {
 		return ErrConnectionClosed
-	} else {
-		c.messages <- message{
-			message: msg,
-			typ:     typ,
-		}
-		return nil
 	}
+
+	c.messages <- message{
+		message: msg,
+		typ:     typ,
+		id:      id,
+	}
+
+	return nil
 }
 
 // Sends a string to the connected client. Returns an error
