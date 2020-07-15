@@ -1,3 +1,3 @@
-module github.com/JanBerktold/sse
+module github.com/longsleep/sse
 
 go 1.14

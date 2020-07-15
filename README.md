@@ -1,5 +1,5 @@
 # Server-sent events for Go
-[![Build Status](https://travis-ci.org/JanBerktold/sse.svg)](https://travis-ci.org/JanBerktold/sse) [![GoDoc](https://godoc.org/github.com/JanBerktold/sse?status.svg)](https://godoc.org/github.com/JanBerktold/sse)
+[![GoDoc](https://godoc.org/github.com/longsleep/sse?status.svg)](https://godoc.org/github.com/longsleep/sse)
 
 This is a lightweight SEE library for Golang which is designed to play nicely along different packages and provide a convient usage. Compatible with every Go version since 1.1.
 
@@ -10,7 +10,7 @@ This is a lightweight SEE library for Golang which is designed to play nicely al
 ```go
 import (
 	"net/http"
-	"github.com/janberktold/sse"
+	"github.com/longsleep/sse"
 )
 
 type Person struct {
@@ -41,7 +41,7 @@ func main() {
 		conn.WriteString("Hello how are you?")
 
 		// trigger the event "feed" with "This is a message" as payload
-		// [extended example](https://github.com/JanBerktold/sse/tree/master/examples/events)
+		// [extended example](https://github.com/longsleep/sse/tree/master/examples/events)
 		conn.WriteStringEvent("feed", "This is a message")
 
 		for {
@@ -66,7 +66,7 @@ Using a Upgrader instance allows you to specify a RetryTime interval at which th
 ```go
 import (
 	"net/http"
-	"github.com/janberktold/sse"
+	"github.com/longsleep/sse"
 )
 
 type Person struct {

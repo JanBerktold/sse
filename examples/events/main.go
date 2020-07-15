@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/JanBerktold/sse"
+	"github.com/longsleep/sse"
 	"net/http"
 	"time"
 )
