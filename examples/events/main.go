@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/longsleep/sse"
 	"net/http"
 	"time"
+
+	"github.com/longsleep/sse"
 )
 
 func HandleSSE(w http.ResponseWriter, r *http.Request) {
@@ -33,5 +34,5 @@ func main() {
 		http.ServeFile(w, r, "main.html")
 	})
 
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8080", nil)
 }

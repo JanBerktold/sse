@@ -8,10 +8,19 @@ import (
 )
 
 var (
-	ErrStreamingNotSupported = errors.New("Streaming unsupported!")
-	ErrConnectionClosed      = errors.New("Connection already closed")
+	ErrStreamingNotSupported = errors.New("streaming unsupported")
+	ErrConnectionClosed      = errors.New("connection already closed")
 
 	globalUpgrader = Upgrader{}
+)
+
+const (
+	keyID    = "id"
+	keyEvent = "event"
+	keyData  = "data"
+	keyRetry = "retry"
+
+	sseContentType = "text/event-stream"
 )
 
 type Upgrader struct {
@@ -32,7 +41,7 @@ func (up Upgrader) Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error
 	}
 
 	// Set the headers related to event streaming.
-	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Content-Type", sseContentType)
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 
@@ -46,7 +55,7 @@ func (up Upgrader) Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error
 
 	// tell client about retry time
 	if up.RetryTime > 0 {
-		fmt.Fprintf(w, "retry: %s\n", up.RetryTime)
+		fmt.Fprintf(w, "%s: %s\n", keyRetry, up.RetryTime)
 	}
 
 	go func() {
@@ -54,12 +63,12 @@ func (up Upgrader) Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error
 			select {
 			case msg := <-conn.messages:
 				if len(msg.id) > 0 {
-					fmt.Fprintf(w, "id: %s\n", msg.id)
+					fmt.Fprintf(w, "%s: %s\n", keyID, msg.id)
 				}
 				if len(msg.typ) > 0 {
-					fmt.Fprintf(w, "event: %s\n", msg.typ)
+					fmt.Fprintf(w, "%s: %s\n", keyEvent, msg.typ)
 				}
-				fmt.Fprintf(w, "data: %s\n\n", msg.message)
+				fmt.Fprintf(w, "%s: %s\n\n", keyData, msg.message)
 				f.Flush()
 			case <-conn.shutdown:
 				conn.isOpen = false
